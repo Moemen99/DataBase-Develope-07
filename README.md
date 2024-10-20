@@ -654,3 +654,83 @@ While ORDER BY and GROUP BY can both use multiple columns, they function differe
 3. Clarity: Ensure that the grouping makes logical sense for your data analysis needs.
 
 Remember, the power of multiple column grouping lies in its ability to provide more detailed insights into your data, allowing for more nuanced analysis and reporting.
+
+
+# Counting Students per Department: WHERE vs JOIN Methods
+
+## Method 1: Using WHERE Clause
+
+```sql
+SELECT Dept_Id, COUNT(*) AS CountOfStudentsPerDepartment
+FROM Student 
+WHERE Dept_Id IS NOT NULL
+GROUP BY Dept_Id
+```
+
+### Pros:
+- Simple and straightforward
+- Better performance (only one table involved)
+
+### Cons:
+- Cannot display department names
+
+## Method 2: Using JOIN
+
+```sql
+SELECT S.Dept_Id, COUNT(*) AS CountOfStudentsPerDepartment
+FROM Student S, Department D
+WHERE D.Dept_Id = S.Dept_Id
+GROUP BY S.Dept_Id
+```
+
+### Pros:
+- Ensures only existing departments are counted
+- Can be extended to include department information
+
+### Cons:
+- Slightly lower performance due to joining two tables
+
+## Method 3: JOIN with Department Name
+
+```sql
+SELECT S.Dept_Id, D.Dept_Name, COUNT(*) AS CountOfStudentsPerDepartment
+FROM Student S, Department D
+WHERE D.Dept_Id = S.Dept_Id
+GROUP BY S.Dept_Id, D.Dept_Name
+```
+
+### Pros:
+- Displays department names along with counts
+- Most informative result
+
+### Cons:
+- Lower performance due to joining and grouping by multiple columns
+
+## Key Points:
+
+1. The WHERE method is faster but limited to department IDs.
+2. The JOIN method allows access to department information but may be slower.
+3. When including the department name, it must be added to the GROUP BY clause.
+4. Choose the method based on your specific needs:
+   - Use WHERE for simple counts and better performance.
+   - Use JOIN when you need department names or to ensure department existence.
+
+## Example Results:
+
+Using Method 1 or 2:
+| Dept_Id | CountOfStudentsPerDepartment |
+|---------|------------------------------|
+| 10      | 8                            |
+| 20      | 3                            |
+| 30      | 3                            |
+| 40      | 3                            |
+
+Using Method 3:
+| Dept_Id | Dept_Name | CountOfStudentsPerDepartment |
+|---------|-----------|------------------------------|
+| 10      | IT        | 8                            |
+| 20      | CS        | 3                            |
+| 30      | IS        | 3                            |
+| 40      | DS        | 3                            |
+
+Remember to consider your specific requirements and performance needs when choosing between these methods.
