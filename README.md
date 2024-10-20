@@ -373,3 +373,99 @@ FROM Instructor
 ```
 
 These examples demonstrate how aggregate functions can be applied to different tables and scenarios in a database.
+
+
+
+
+# Understanding GROUP BY in SQL with Aggregate Functions
+
+## Introduction to GROUP BY
+
+The GROUP BY clause in SQL is used to group rows that have the same values in specified columns. It's often used with aggregate functions to perform calculations on each group of rows.
+
+## Basic Usage with Aggregate Functions
+
+Let's consider the Instructor table:
+
+| Ins_Id | Ins_Name | Ins_Degree | Salary     | Dept_Id |
+|--------|----------|------------|------------|---------|
+| 1      | Ahmed    | Master     | 34567.0000 | 10      |
+| 2      | Hany     | Master     | 323423.0000| 10      |
+| ...    | ...      | ...        | ...        | ...     |
+| 15     | Ghada    | NULL       | NULL       | 40      |
+
+### Without GROUP BY
+
+```sql
+SELECT MIN(Salary) AS MinSalary
+FROM Instructor
+```
+This query returns the lowest salary across all departments.
+
+### With GROUP BY
+
+```sql
+SELECT Dept_Id, MIN(Salary) AS MinSalary
+FROM Instructor
+GROUP BY Dept_Id
+```
+This query returns the lowest salary for each department.
+
+## Visual Representation of Grouping
+
+Consider the Employees table:
+
+| Eid | Ename    | Salary | Address   | did |
+|-----|----------|--------|-----------|-----|
+| 1   | ahmed    | 3000   | cairo     | 10  |
+| 2   | ali      | 5000   | cairo     | 10  |
+| ... | ...      | ...    | ...       | ... |
+| 15  | omar     | 3000   | mansoura  | 30  |
+
+When we use GROUP BY, we're essentially dividing the table into subtables or groups based on the specified column(s):
+
+```
+Employees (3 Groups based on 'did')
+┌─────────────────┐  ┌─────────────────┐  ┌─────────────────┐
+│  Department 10  │  │  Department 20  │  │  Department 30  │
+├─────────────────┤  ├─────────────────┤  ├─────────────────┤
+│ ahmed   3000    │  │ mohamed  6000   │  │ sayed   8000    │
+│ ali     5000    │  │ alaa     7000   │  │ reham   1500    │
+│ eman    2000    │  │ ola      4000   │  │ sally   2000    │
+│ khalid  1000    │  │ reem     2000   │  │ omar    3000    │
+│ yousef  4000    │  │ nada     9000   │  └─────────────────┘
+│ sameh   5000    │  └─────────────────┘
+└─────────────────┘
+```
+
+## Key Points about GROUP BY
+
+1. GROUP BY is used with columns containing repeated values.
+2. It's not logical to use GROUP BY with a primary key or unique column.
+3. Aggregate functions (like MIN, MAX, AVG, SUM, COUNT) are applied to each group separately.
+4. Columns in the SELECT statement must either be in the GROUP BY clause or be used with an aggregate function.
+
+## Example Queries
+
+```sql
+-- Average salary per department
+SELECT Dept_Id, AVG(Salary) AS AvgSalary
+FROM Instructor
+GROUP BY Dept_Id
+
+-- Count of employees per department
+SELECT did, COUNT(*) AS EmployeeCount
+FROM Employees
+GROUP BY did
+
+-- Total salary per address
+SELECT Address, SUM(Salary) AS TotalSalary
+FROM Employees
+GROUP BY Address
+```
+
+## Considerations
+
+- GROUP BY comes after the WHERE clause but before ORDER BY in a SQL statement.
+- You can group by multiple columns: `GROUP BY column1, column2, ...`
+- When using GROUP BY, ensure that non-aggregated columns in the SELECT list are included in the GROUP BY clause.
