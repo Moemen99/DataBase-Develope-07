@@ -173,7 +173,7 @@ Database functions are reusable code blocks that perform specific tasks within a
 
 Aggregate functions are a type of built-in function that perform calculations on a set of values and return a single result. They are also known as scalar functions because they return a single (scalar) value.
 
-## The COUNT() Function
+## 1. The COUNT() Function
 
 COUNT() is one of the most commonly used aggregate functions. It is used to count the number of rows that match specified criteria.
 
@@ -246,3 +246,130 @@ This query would return the number of employees in each department.
 - Performance: COUNT(*) is generally faster than COUNT(column_name) when counting all rows.
 - NULL handling: Be aware of how NULL values affect your count when using column names.
 - Combining with other clauses: COUNT() can be used with WHERE, HAVING, and other SQL clauses for more complex queries.
+
+
+
+
+## 2. SUM() Function
+
+The SUM() function calculates the total sum of a set of values.
+
+### Syntax and Usage
+```sql
+SELECT SUM(column_name)
+FROM table_name
+```
+
+### Example
+```sql
+SELECT SUM(Salary) AS TotalSalary
+FROM Employees
+```
+This query returns the total sum of all salaries.
+
+### Key Points
+- Takes one parameter: a column name of numeric type
+- Ignores NULL values in the calculation
+
+## 3. AVG() Function
+
+The AVG() function calculates the average value of a set of values.
+
+### Syntax and Usage
+```sql
+SELECT AVG(column_name)
+FROM table_name
+```
+
+### Example
+```sql
+SELECT AVG(Salary) AS AverageSalary
+FROM Employees
+```
+This query returns the average salary of all employees.
+
+### Key Points
+- Takes one parameter: a column name of numeric type
+- Equivalent to SUM(column) / COUNT(column)
+- Ignores NULL values in the calculation
+
+## 4. MAX() Function
+
+The MAX() function returns the maximum value in a set of values.
+
+### Syntax and Usage
+```sql
+SELECT MAX(column_name)
+FROM table_name
+```
+
+### Example
+```sql
+SELECT MAX(Salary) AS HighestSalary
+FROM Employees
+```
+This query returns the highest salary among all employees.
+
+## 5. MIN() Function
+
+The MIN() function returns the minimum value in a set of values.
+
+### Syntax and Usage
+```sql
+SELECT MIN(column_name)
+FROM table_name
+```
+
+### Example
+```sql
+SELECT MIN(Salary) AS LowestSalary
+FROM Employees
+```
+This query returns the lowest salary among all employees.
+
+## Combined Usage
+
+These functions can be used together in a single query:
+
+```sql
+SELECT 
+    COUNT(*) AS TotalEmployees,
+    SUM(Salary) AS TotalSalary,
+    AVG(Salary) AS AverageSalary,
+    MAX(Salary) AS HighestSalary,
+    MIN(Salary) AS LowestSalary
+FROM Employees
+```
+
+## Key Points about Aggregate Functions
+
+1. They return a single value based on a set of rows.
+2. The returned value is calculated and may not exist in the original data.
+3. They ignore NULL values (except COUNT(*)).
+4. They are often used with GROUP BY for more complex analyses.
+
+## Examples with Different Tables
+
+```sql
+-- Count of students
+SELECT COUNT(*) AS CountOfStudents
+FROM Student
+
+-- Count of students with age value
+SELECT COUNT(St_Age) AS CountOfStudentsHavingAgeValue 
+FROM Student
+
+-- Sum of instructor salaries
+SELECT SUM(Salary) AS SumOfSalary
+FROM Instructor
+
+-- Average instructor salary
+SELECT AVG(Salary) AS AverageSalary
+FROM Instructor
+
+-- Highest and lowest instructor salaries
+SELECT MAX(Salary) AS MaxSalary, MIN(Salary) AS MinSalary
+FROM Instructor
+```
+
+These examples demonstrate how aggregate functions can be applied to different tables and scenarios in a database.
