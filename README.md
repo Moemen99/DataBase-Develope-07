@@ -734,3 +734,62 @@ Using Method 3:
 | 40      | DS        | 3                            |
 
 Remember to consider your specific requirements and performance needs when choosing between these methods.
+
+
+# Using HAVING Without GROUP BY in SQL
+
+## Scenario: Sum of Salaries for Large Instructor Groups
+
+Sometimes we need to apply a condition based on an aggregate function result for the entire table. This is where we can use HAVING without GROUP BY.
+
+## The Query
+
+```sql
+SELECT SUM(Salary) AS SumOfSalary
+FROM Instructor
+HAVING COUNT(*) > 3
+```
+
+## How It Works
+
+1. The entire table is treated as a single group.
+2. SUM(Salary) calculates the total salary for all instructors.
+3. HAVING COUNT(*) > 3 checks if the total number of instructors exceeds 3.
+4. If true, the sum is returned; otherwise, no result is returned.
+
+## Why Use HAVING Instead of WHERE
+
+- WHERE operates on individual rows before any aggregation.
+- HAVING operates on the result of aggregate functions.
+- In this case, we need to check the count of all rows, which is an aggregate operation.
+
+## Key Points
+
+1. This is a special use case of HAVING without GROUP BY.
+2. It's used when there's an aggregate function in the SELECT clause.
+3. The entire table is treated as one group.
+4. It allows conditions on aggregate function results for the whole table.
+
+## Example Scenarios
+
+1. Return total budget if department count exceeds a threshold:
+   ```sql
+   SELECT SUM(Budget) AS TotalBudget
+   FROM Department
+   HAVING COUNT(*) > 5
+   ```
+
+2. Show average salary if there are high-earning employees:
+   ```sql
+   SELECT AVG(Salary) AS AverageSalary
+   FROM Employee
+   HAVING MAX(Salary) > 100000
+   ```
+
+## Considerations
+
+- This usage is less common but powerful for specific scenarios.
+- It's particularly useful for conditional aggregations on the entire dataset.
+- Be cautious with large datasets, as it always processes the entire table.
+
+Remember, this technique treats the whole table as a single group, allowing you to apply conditions on aggregate results without explicit grouping.
