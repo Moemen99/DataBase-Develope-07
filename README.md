@@ -564,3 +564,93 @@ This query:
    ```
 
 Remember, the power of GROUP BY comes from its ability to summarize data, and when combined with WHERE and HAVING, it provides a robust tool for data analysis in SQL.
+
+# GROUP BY with Multiple Columns in SQL
+
+## Introduction
+
+When grouping data in SQL, we can use multiple columns in the GROUP BY clause to create more specific groups. This is particularly useful when we want to analyze data at a more granular level.
+
+## Basic Query Structure
+
+```sql
+SELECT Dept_Id, St_Address, COUNT(*) AS CountOfStudentsPerDepartment
+FROM Student 
+WHERE Dept_Id IS NOT NULL AND St_Address IS NOT NULL
+GROUP BY Dept_Id, St_Address
+```
+
+## How Multiple Column Grouping Works
+
+When grouping by multiple columns, SQL creates distinct groups for each unique combination of the specified columns.
+
+### Visual Representation:
+
+```
+DepartmentId, St_Address
+10           Cairo       = 3
+10           Alex        = 2
+10           NULL        = 9
+20           Cairo       = 0
+20           Alex        = 1
+20           NULL        = 3
+30           Cairo       = 4
+30           Alex        = 0
+30           NULL        = 10
+NULL         Cairo       = 3
+NULL         Alex        = 2
+NULL         NULL        = 9
+```
+
+## Key Points
+
+1. **Column Selection**: Any non-aggregated column in the SELECT clause must appear in the GROUP BY clause.
+
+2. **Order of Columns**: The order of columns in the GROUP BY clause doesn't affect the result, but it may affect the order of the output rows.
+
+3. **NULL Handling**: NULL values are treated as a distinct group unless filtered out in the WHERE clause.
+
+4. **Filtering**: Use WHERE to filter rows before grouping, and HAVING to filter groups after grouping.
+
+## Examples
+
+### Basic Grouping
+```sql
+SELECT Dept_Id, St_Address, COUNT(*) AS CountOfStudentsPerDepartment
+FROM Student 
+WHERE Dept_Id IS NOT NULL 
+GROUP BY Dept_Id, St_Address
+```
+
+### Filtering NULL Addresses
+```sql
+SELECT Dept_Id, St_Address, COUNT(*) AS CountOfStudentsPerDepartment
+FROM Student 
+WHERE Dept_Id IS NOT NULL AND St_Address IS NOT NULL
+GROUP BY Dept_Id, St_Address
+```
+
+### Adding a HAVING Clause
+```sql
+SELECT Dept_Id, St_Address, COUNT(*) AS CountOfStudentsPerDepartment
+FROM Student 
+WHERE Dept_Id IS NOT NULL AND St_Address IS NOT NULL
+GROUP BY Dept_Id, St_Address
+HAVING COUNT(*) > 2
+```
+
+## Comparison with ORDER BY
+
+While ORDER BY and GROUP BY can both use multiple columns, they function differently:
+
+- **ORDER BY**: Sorts the result set based on the specified columns. When multiple columns are used, it sorts by the first column, then by the second within each group of the first, and so on.
+
+- **GROUP BY**: Creates distinct groups based on unique combinations of the specified columns. All columns are considered simultaneously for grouping.
+
+## Considerations
+
+1. Performance: Grouping by multiple columns can be more computationally intensive, especially with large datasets.
+2. Indexing: Proper indexing on the grouped columns can significantly improve query performance.
+3. Clarity: Ensure that the grouping makes logical sense for your data analysis needs.
+
+Remember, the power of multiple column grouping lies in its ability to provide more detailed insights into your data, allowing for more nuanced analysis and reporting.
