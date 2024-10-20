@@ -793,3 +793,73 @@ HAVING COUNT(*) > 3
 - Be cautious with large datasets, as it always processes the entire table.
 
 Remember, this technique treats the whole table as a single group, allowing you to apply conditions on aggregate results without explicit grouping.
+
+
+# Self-Join to Count Students per Supervisor
+
+## The Problem
+
+We want to find out how many students each supervisor is responsible for. This involves a self-relationship within the Student table, where some students are also supervisors.
+
+## The Query
+
+```sql
+SELECT 
+    Supers.St_Id,
+    Supers.St_Fname,
+    COUNT(Stds.St_Id) AS CountOfStudents
+FROM 
+    Student Stds,
+    Student Supers
+WHERE 
+    Supers.St_Id = Stds.St_super
+GROUP BY 
+    Supers.St_Id,
+    Supers.St_Fname
+```
+
+## How It Works
+
+1. **Self-Join**: We join the Student table with itself.
+   - `Stds` represents students
+   - `Supers` represents supervisors
+
+2. **Join Condition**: `Supers.St_Id = Stds.St_super`
+   - This links each student to their supervisor
+
+3. **Grouping**: `GROUP BY Supers.St_Id, Supers.St_Fname`
+   - We group by both ID and name to handle potential cases of supervisors with the same name
+
+4. **Counting**: `COUNT(Stds.St_Id)`
+   - This counts the number of students for each supervisor
+
+## Breakdown of the Query
+
+- `SELECT Supers.St_Id, Supers.St_Fname`: Identifies the supervisor
+- `COUNT(Stds.St_Id) AS CountOfStudents`: Counts students per supervisor
+- `FROM Student Stds, Student Supers`: Self-join of the Student table
+- `WHERE Supers.St_Id = Stds.St_super`: Links students to supervisors
+- `GROUP BY Supers.St_Id, Supers.St_Fname`: Groups results by supervisor
+
+## Example Result
+
+| St_Id | St_Fname | CountOfStudents |
+|-------|----------|-----------------|
+| 1     | Ahmed    | 6               |
+| 2     | Heba     | 2               |
+| 9     | Saly     | 2               |
+| 12    | Noha     | 2               |
+| 17    | Ahmed    | 2               |
+
+## Key Points
+
+1. Self-joins are useful for hierarchical data within a single table.
+2. Grouping by both ID and name ensures unique identification of supervisors.
+3. The COUNT function gives us the number of students per supervisor.
+4. This query only shows supervisors who have at least one student.
+
+## Considerations
+
+- To include supervisors with no students, consider using a LEFT JOIN instead.
+- Ensure indexes on St_Id and St_super for better performance.
+- Be cautious with large datasets as self-joins can be resource-intensive.
