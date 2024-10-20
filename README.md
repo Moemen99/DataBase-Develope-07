@@ -157,3 +157,92 @@ INNER JOIN Student S ON S.St_Id = SC.St_Id
 ```
 
 This query applies different grade increases based on the student's address.
+
+
+
+# Aggregate Functions in Databases: 
+
+## Introduction to Database Functions
+
+Database functions are reusable code blocks that perform specific tasks within a database system. They help maintain code efficiency and reduce repetition. Functions in databases are categorized into two main types:
+
+1. User-Defined Functions (UDFs)
+2. Built-in Functions
+
+## Aggregate Functions
+
+Aggregate functions are a type of built-in function that perform calculations on a set of values and return a single result. They are also known as scalar functions because they return a single (scalar) value.
+
+## The COUNT() Function
+
+COUNT() is one of the most commonly used aggregate functions. It is used to count the number of rows that match specified criteria.
+
+### Syntax and Usage
+
+COUNT() can be used with different arguments:
+
+1. COUNT(*)
+2. COUNT(column_name)
+
+Let's explore these using the following example table:
+
+| Eid | Ename    | Salary | Address   | did |
+|-----|----------|--------|-----------|-----|
+| 1   | ahmed    | 3000   | cairo     | 10  |
+| 2   | ali      | 5000   | cairo     | 10  |
+| ...   | ...    | ...    | ...       | ... |
+| 15  | omar     | NULL   | mansoura  | 30  |
+
+### COUNT(*) - Counting All Rows
+
+```sql
+SELECT COUNT(*)
+FROM Employees
+```
+
+This query returns the total number of rows in the table, including rows with NULL values in any column.
+
+Result: 15 (total number of rows)
+
+### COUNT(column_name) - Counting Non-NULL Values
+
+```sql
+SELECT COUNT(Eid)
+FROM Employees
+```
+
+This query counts the number of non-NULL values in the Eid column.
+
+Result: 15 (assuming Eid is the primary key and has no NULL values)
+
+```sql
+SELECT COUNT(Salary)
+FROM Employees
+```
+
+This query counts the number of non-NULL values in the Salary column.
+
+Result: 14 (one employee has a NULL salary)
+
+## Key Points about COUNT()
+
+1. COUNT(*) includes all rows, regardless of NULL values.
+2. COUNT(column_name) only counts non-NULL values in the specified column.
+3. COUNT() always returns a single value, making it a scalar function.
+4. It's often used with GROUP BY to count occurrences within groups.
+
+## Example: Counting Employees by Department
+
+```sql
+SELECT did, COUNT(*) AS EmployeeCount
+FROM Employees
+GROUP BY did
+```
+
+This query would return the number of employees in each department.
+
+## Considerations
+
+- Performance: COUNT(*) is generally faster than COUNT(column_name) when counting all rows.
+- NULL handling: Be aware of how NULL values affect your count when using column names.
+- Combining with other clauses: COUNT() can be used with WHERE, HAVING, and other SQL clauses for more complex queries.
