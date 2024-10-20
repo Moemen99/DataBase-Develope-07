@@ -469,3 +469,98 @@ GROUP BY Address
 - GROUP BY comes after the WHERE clause but before ORDER BY in a SQL statement.
 - You can group by multiple columns: `GROUP BY column1, column2, ...`
 - When using GROUP BY, ensure that non-aggregated columns in the SELECT list are included in the GROUP BY clause.
+
+
+
+# GROUP BY with COUNT and HAVING Clause in SQL
+
+## Grouping Students by Department
+
+To group students by their department and count the number of students in each department, we can use the GROUP BY clause with the COUNT function.
+
+### Basic Query
+
+```sql
+SELECT Dept_Id, COUNT(*) AS CountOfStudentsPerDepartment 
+FROM Student 
+GROUP BY Dept_Id
+```
+
+This query will:
+1. Group all students by their Dept_Id
+2. Count the number of students in each group
+3. Display the Dept_Id and the count for each group
+
+## Filtering Before Grouping (WHERE Clause)
+
+If we want to exclude students who are not assigned to any department:
+
+```sql
+SELECT Dept_Id, COUNT(*) AS CountOfStudentsPerDepartment 
+FROM Student 
+WHERE Dept_Id IS NOT NULL
+GROUP BY Dept_Id
+```
+
+This query:
+1. Filters out students with NULL Dept_Id before grouping
+2. Groups the remaining students by Dept_Id
+3. Counts and displays the results
+
+## Filtering After Grouping (HAVING Clause)
+
+To add a condition on the grouped results, we use the HAVING clause:
+
+```sql
+SELECT Dept_Id, COUNT(*) AS CountOfStudentsPerDepartment 
+FROM Student 
+WHERE Dept_Id IS NOT NULL
+GROUP BY Dept_Id 
+HAVING COUNT(*) > 3
+```
+
+This query:
+1. Filters out students with NULL Dept_Id
+2. Groups students by Dept_Id
+3. Counts students in each group
+4. Only displays groups with more than 3 students
+
+## Key Points
+
+1. **WHERE vs HAVING:**
+   - WHERE filters rows before grouping
+   - HAVING filters grouped results after grouping
+
+2. **Order of Clauses:**
+   ```
+   SELECT ... FROM ... WHERE ... GROUP BY ... HAVING ... ORDER BY ...
+   ```
+
+3. **HAVING with Aggregate Functions:**
+   - HAVING is typically used with aggregate functions (COUNT, SUM, AVG, etc.)
+   - It can reference aliases defined in the SELECT clause
+
+4. **Performance Considerations:**
+   - Use WHERE for filtering individual rows when possible
+   - Use HAVING only for conditions that involve aggregate results
+
+## Examples
+
+1. Average age of students by department, excluding departments with less than 5 students:
+   ```sql
+   SELECT Dept_Id, AVG(Age) AS AvgAge, COUNT(*) AS StudentCount
+   FROM Student
+   GROUP BY Dept_Id
+   HAVING COUNT(*) >= 5
+   ```
+
+2. Total scholarships by department, only for departments with total scholarships over $10,000:
+   ```sql
+   SELECT Dept_Id, SUM(Scholarship) AS TotalScholarship
+   FROM Student
+   WHERE Scholarship IS NOT NULL
+   GROUP BY Dept_Id
+   HAVING SUM(Scholarship) > 10000
+   ```
+
+Remember, the power of GROUP BY comes from its ability to summarize data, and when combined with WHERE and HAVING, it provides a robust tool for data analysis in SQL.
